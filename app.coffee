@@ -54,12 +54,23 @@ vrIcon = new Layer
 	y: 397 + 20
 	image: "images/vrIcon.png"
 
+
 colBtn = new Layer
 	width: 37
 	height: 34
 	x: 667
 	y: 49
 	image: "images/colBtn.png"
+
+fillLike = new Layer
+	width: 104
+	height: 104
+	opacity: 0
+	scale: 0
+	image: "images/fillLike.png"
+	x: 634
+	y: 12
+
 
 # pre setting
 scroll.opacity = 0
@@ -111,13 +122,13 @@ vr.states.add
 		opacity: 1
 		scale: 1
 	hide:
-		scale: .2
+		scale: .4
 		opacity:0
 
-exitBtn.states.switch("show",delay: 0.25)
-colBtn.states.switch("show",delay: 0.25)
-scroll.states.switch("show",delay: 0.25)
-content.states.switch("show",delay: 0.25)
+exitBtn.states.switch("show",delay: 0.4)
+colBtn.states.switch("show",delay: 0.4)
+scroll.states.switch("show",delay: 0.4)
+content.states.switch("show",delay: 0.4)
 
 #scroll & gesture setting 
 scroll.scrollHorizontal = false 
@@ -142,13 +153,37 @@ scroll.onTouchEnd ->
 		vr.bringToFront()
 		exitBtn.bringToFront()
 		colBtn.bringToFront()
+		fillLike.bringToFront()
 
+# collect
+colBtn.onClick ->
+	fillLike.animate
+		properties:
+			scale: .8
+			opacity: 1
+		time: .5
+		curve: "spring(500,20,0,0.01)"	
+		
+fillLike.onClick ->
+	fillLike.animate
+		properties:
+			scale: 0
+		time: .2
+		curve: "ease"	
+
+#exit vr mode
 exitBtn.onClick ->
 	scroll.bringToFront()
 	content.bringToFront()
 	exitBtn.bringToFront()
 	colBtn.bringToFront() 
 	vrIcon.bringToFront()
+	fillLike.bringToFront()
 	vrIcon.states.switch("show")
-	vr.states.switch("hide",time: 1)
+	vr.states.switch("hide",time: .5)
+	scroll.states.switch("show",time: .1)
+	content.states.switch("show",time: 1)
+	
+	
 		
+
