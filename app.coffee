@@ -19,11 +19,15 @@ vr = new VRComponent
 	back: "images/back.jpg"
 	bottom: "images/bottom.jpg"
 	top: "images/top.jpg"
-    
+	mobilePanning: false
+	panning: false
+
+vr.panning = false
+
 content = new Layer
 	width: 750
 	height: 400
-	y: 934
+	y: 934 + 30
 	image: "images/content.png"
 
 scroll = new ScrollComponent
@@ -58,8 +62,8 @@ colBtn = new Layer
 	image: "images/colBtn.png"
 
 # pre setting
-cover.opacity = 0
-cover.y = 20
+scroll.opacity = 0
+scroll.y = 20
 content.opacity = 0
 content.y = 934 + 20
 vrIcon.opacity = 0
@@ -68,11 +72,12 @@ colBtn.opacity = 0
 vr.opacity = 0
 vr.scale = .2
 
-cover.states.add
+scroll.states.add
 	show:
 		opacity: 1
 		y: 0
 	hide:
+		y: 20
 		opacity:0
 
 content.states.add
@@ -80,6 +85,7 @@ content.states.add
 		y: 934
 		opacity: 1
 	hide:
+		y: 934 + 20
 		opacity:0
 
 exitBtn.states.add
@@ -96,9 +102,8 @@ colBtn.states.add
 
 vrIcon.states.add
 	show:
-		opacity: 1
+		opacity: 0
 	hide:
-		visible: false
 		opacity:0
 
 vr.states.add
@@ -106,11 +111,12 @@ vr.states.add
 		opacity: 1
 		scale: 1
 	hide:
+		scale: .2
 		opacity:0
 
 exitBtn.states.switch("show",delay: 0.25)
 colBtn.states.switch("show",delay: 0.25)
-cover.states.switch("show",delay: 0.25)
+scroll.states.switch("show",delay: 0.25)
 content.states.switch("show",delay: 0.25)
 
 #scroll & gesture setting 
@@ -129,9 +135,20 @@ scrolltoY = (y) ->
 	
 scroll.onTouchEnd ->
 	if Math.abs(scroll.scrollY) > 50 && scroll.direction == "up"
-		cover.states.switch("hide",time: .3)
+		scroll.states.switch("hide",time: .3)
 		content.states.switch("hide",time: .3)
 		vrIcon.states.switch("hide",time: .3)
 		vr.states.switch("show",time: 1)
 		vr.bringToFront()
+		exitBtn.bringToFront()
+		colBtn.bringToFront()
 
+exitBtn.onClick ->
+	scroll.bringToFront()
+	content.bringToFront()
+	exitBtn.bringToFront()
+	colBtn.bringToFront() 
+	vrIcon.bringToFront()
+	vrIcon.states.switch("show")
+	vr.states.switch("hide",time: 1)
+		
